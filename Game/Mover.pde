@@ -5,7 +5,7 @@ class Mover {
   PVector velocity;
   PVector acceleration;
   float restViApresChoc = 0.8; //ratio de restitution de la vitesse après un choc statique
-  float gravityConstant = 1;
+  float gravityConstant = 0.4;
   float frictionMagnitude = 0.1;
   float empietementTolere = 1;
     

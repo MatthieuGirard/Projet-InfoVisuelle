@@ -14,6 +14,7 @@ boolean run = true;
 
 void setup() 
 {
+  noStroke();
   int ratioSize = 3; //généralement de 2 (640x360) à 5 (1920x1080)
   size(16*20*ratioSize, 9*20*ratioSize, P3D);
   initCylinder();
@@ -53,10 +54,10 @@ void rotateScene() {
 void placeCamEtLum()
 { 
   //les 2 points; initial et final, de jeu et de controle.
-  float jeuZ = 600, jeuY = 150;
+  float jeuZ = 300, jeuY = 400;
   float contrZ = 1, contrY = 300;
   
-  float decalageMil = 0; // le rapport entre
+  float decalageMil = 0.3; // le rapport entre
                          // la distance entre le point de jeu et celui de controle et
                          // la distance entre le point milieu et le centre de rotation.
   

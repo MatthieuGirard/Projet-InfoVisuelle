@@ -1,7 +1,7 @@
 //-- parametres
-float cylinderRadius = 25;  //radius
-float cylinderHeight = 60;    
-int cylinderResolution = 8;  //# point
+float cylinderRadius = 20;  //radius
+float cylinderHeight = 30;    
+int cylinderResolution = 42;  //# point
 
   
 //-- interne
