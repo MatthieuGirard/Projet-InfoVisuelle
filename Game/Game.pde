@@ -4,7 +4,7 @@ float tiltSpeed = 1;
 float pasRotY = PI/8; //le pas de rotation de l'angle y, en radian
 //transition
 float tempsTransition = 0.5;
-//rajout de comm a effacer par un pd de chinois
+
 //--INTERNE
 float platXRotation = 0, platYRotation = 0, platZRotation = 0; // rotation du plateau
 Mover mover = new Mover();
