@@ -11,10 +11,12 @@ Mover mover = new Mover();
 Mode mode = Mode.Jeu;
 float etat = 0; //entre 0 (jeu) et 1 (controle)
 boolean run = true;
+boolean paused = false;
 
 void setup() 
 {
   int ratioSize = 3; //généralement de 2 (640x360) à 5 (1920x1080)
+  noStroke();
   size(16*20*ratioSize, 9*20*ratioSize, P3D);
   initCylinder();
 }
@@ -23,8 +25,24 @@ void draw()
 {
   updateMode();
   placeCamEtLum();
-  rotateScene();
+  placeScene(); // juste le plateau
   
+  //une boule
+  if (run && !paused)
+    mover.update();
+  mover.display();
+  
+  //les cylindres
+  displayCylinders();
+}
+
+//place et rotate la scène (avec juste le plateau)
+void placeScene() {
+  //roation du plateau
+  float ratioEtat = 1-etat; //pour forcer une rotation nulle en mode contrôle.
+  rotateX(platXRotation * ratioEtat);
+  rotateY(platYRotation * ratioEtat);
+  rotateZ(platZRotation * ratioEtat);
   
   //le terrain
   fill(200);
@@ -33,32 +51,17 @@ void draw()
     box(tailleTerrainX, hauteurTerrain, tailleTerrainZ);
   popMatrix();
   
-  //une boule
-  if (run)
-    mover.update();
-  mover.display();
-  
-  //un cylindre
-  displayCylinders();
-}
-
-void rotateScene() {
-  //roation du plateau
-  float ratioEtat = 1-etat; //pour forcer une rotation nulle en mode contrôle.
-  rotateX(platXRotation * ratioEtat);
-  rotateY(platYRotation * ratioEtat);
-  rotateZ(platZRotation * ratioEtat);
 }
 
 void placeCamEtLum()
 { 
   //les 2 points; initial et final, de jeu et de controle.
-  float jeuZ = 600, jeuY = 150;
+  float jeuZ = 300, jeuY = 350;
   float contrZ = 1, contrY = 300;
   
-  float decalageMil = 0; // le rapport entre
-                         // la distance entre le point de jeu et celui de controle et
-                         // la distance entre le point milieu et le centre de rotation.
+  float decalageMil = 0.3; // le rapport entre
+                           // la distance entre le point de jeu et celui de controle et
+                           // la distance entre le point milieu et le centre de rotation.
   
   float milieuZ = (jeuZ+contrZ)/2, milieuY = (jeuY+contrY)/2;
   PVector pente = new PVector(0, contrZ-jeuZ, -(contrY-jeuY));
@@ -88,11 +91,9 @@ void placeCamEtLum()
 
 void mouseDragged()
 {
-  if (!run)
-    return;
+  if (!run) return;
   
   float tiltMaxAngle = PI/6;
-  
   platXRotation = constrain( platXRotation + tiltSpeed*(mouseY-pmouseY)/64 , -tiltMaxAngle, tiltMaxAngle);
   platZRotation = constrain( platZRotation + tiltSpeed*(mouseX-pmouseX)/64 , -tiltMaxAngle, tiltMaxAngle);
 }
@@ -103,6 +104,11 @@ void mouseWheel(MouseEvent event) {
 }
 
 void keyPressed() {
+  //p : pause
+  if (key == 'p')
+    paused = !paused;
+    
+  //-- les touches spéciales
   if (key != CODED) 
     return ;
   
@@ -124,12 +130,6 @@ void keyPressed() {
     }
   }
 }  
-
-float entrePiEtMoinsPi(float a) {
-  if (a > PI) return a - TWO_PI;
-  else if (a < -PI) return a + TWO_PI;
-  else return a;
-}
 
 void keyReleased() {
   if (key != CODED) 
@@ -190,5 +190,11 @@ void setModeTransition(boolean versControle)
 void setModeControle()
 {
   mode = Mode.Controle;
-  run = false;
+  run = true;
+}
+
+float entrePiEtMoinsPi(float a) {
+  if (a > PI) return a - TWO_PI;
+  else if (a < -PI) return a + TWO_PI;
+  else return a;
 }
