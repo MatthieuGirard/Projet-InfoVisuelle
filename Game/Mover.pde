@@ -1,20 +1,30 @@
 class Mover {
+  float mass;
+  float radius;
   PVector location;
   PVector velocity;
   PVector acceleration;
-  float mass;
+  float restViApresChoc = 0.8; //ratio de restitution de la vitesse après un choc statique
+  float gravityConstant = 1;
+  float frictionMagnitude = 0.1;
+  float empietementTolere = 1;
+    
   
-  Mover() {
+  Mover(float radius, float mass) {
     location = new PVector(0,0,0);
     velocity = new PVector(0,0,0);
     acceleration = new PVector(0,0,0);
-    mass = 1;
+    this.radius = radius;
+    this.mass = mass;
+  }
+  
+  Mover() {
+    this(15.0, 1.0);
   }
  
   void update() {
     
     // frottement, frein. s'oppose à la vitesse :
-    float frictionMagnitude = 0.1;
     PVector frein = velocity.get();
     frein.normalize();
     frein.mult(-frictionMagnitude);
@@ -35,13 +45,16 @@ class Mover {
     
     // contrôle la position :
     checkEdges();
+    checkCylinderCollision();
   }
   
   void display() {
-    noStroke();
-    fill(255);
-    translate(location.x, 30 + location.y, location.z);
-    sphere(20);
+    pushMatrix();
+      noStroke();
+      fill(0,0,255);
+      translate(location.x, radius + location.y, location.z);
+      sphere(radius);
+    popMatrix();
   }
   
   void checkEdges() {
@@ -61,5 +74,37 @@ class Mover {
       location.z = -tailleTerrainZ/2;
       velocity.z *= -1;
     }
+  }
+  
+  void checkCylinderCollision() {
+    for (PVector v : cylindersPos) {
+      if (collide2D(v, cylinderRadius, location, radius)) {
+        //il y a une collision; on modifie la vitesse du mover.
+        //V' = V − 2(V · n)n
+        PVector n = v.get();
+        n.sub(location);
+        n.normalize();
+        PVector vn2n = velocity.get();
+        vn2n = PVector.mult(n, vn2n.dot(n)*2);
+        velocity.sub(vn2n);
+        velocity.mult(restViApresChoc);
+        
+        //on update sa position
+        //on le pousse hors de la balle selon n (selon tolérance pour optimiser)
+        float empietement = cylinderRadius + radius - v.dist(location);
+        if (empietement >= empietementTolere) {
+          PVector correction = PVector.mult(n, empietement);
+          location.sub(correction);
+        }
+      }
+    }
+  }
+  
+  //utilise x and z, centre de 2 spheres et leurs rayons
+  boolean collide2D(PVector p1, float r1, PVector p2, float r2) {
+    PVector v = p1.get();
+    v.sub(p2);
+    v.y = 0;
+    return v.magSq() <= (r1+r2)*(r1+r2);
   }
 }
