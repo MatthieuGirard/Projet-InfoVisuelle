@@ -2,7 +2,7 @@ class Mover {
   //-- parametres
   boolean perteEnergieApresChocActivee = true;
   float ratioEnergieApresChoc = 0.8; //ratio de restitution de l'énergie après un choc statique
-  float gravityConstant = 0.4;
+  float gravityConstant = 0.7;
   float frictionMagnitude = 0.1;
   float empietementMaxContre = 0.4; //en dessous de ces valeurs, le mover est considéré contre un obstacle
   float vitesseMaxContre = 0.1;     //vitesse normale de collision
@@ -115,6 +115,7 @@ class Mover {
         n.sub(c);
         n.normalize();
         
+        /* debug: le probleme vient lorsqu'il y a 2 collision la même frame.
         if(location.dist(oldLoc)>10)
           println("--- ENORME ------------------------------------------------------------");
         println("jump:    "+location.dist(oldLoc));
@@ -124,7 +125,7 @@ class Mover {
         println("jump:    "+PVector.sub( location, oldLoc ));
         println("vitesse: "+velocity+"\n");
         if ( estContre(c, cylinderRadius, n, empietement) )
-          println("contre!");
+          println("contre!");*/
           
           
         //on update la vitesse

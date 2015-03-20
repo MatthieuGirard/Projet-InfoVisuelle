@@ -56,7 +56,7 @@ void placeScene() {
 void placeCamEtLum()
 { 
   //les 2 points; initial et final, de jeu et de controle.
-  float jeuZ = 300, jeuY = 350;
+  float jeuZ = 300, jeuY = 400;
   float contrZ = 1, contrY = 300;
   
   float decalageMil = 0.3; // le rapport entre
@@ -190,7 +190,7 @@ void setModeTransition(boolean versControle)
 void setModeControle()
 {
   mode = Mode.Controle;
-  run = true;
+  run = false;
 }
 
 float entrePiEtMoinsPi(float a) {
