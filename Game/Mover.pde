@@ -1,3 +1,6 @@
+
+
+
 class Mover {
   float mass;
   float radius;
@@ -5,7 +8,7 @@ class Mover {
   PVector velocity;
   PVector acceleration;
   float restViApresChoc = 0.8; //ratio de restitution de la vitesse après un choc statique
-  float gravityConstant = 0.4;
+  float gravityConstant = 0.7;
   float frictionMagnitude = 0.1;
   float empietementTolere = 1;
     
@@ -81,11 +84,10 @@ class Mover {
       if (collide2D(v, cylinderRadius, location, radius)) {
         //il y a une collision; on modifie la vitesse du mover.
         //V' = V − 2(V · n)n
-        PVector n = v.get();
-        n.sub(location);
+        PVector n = PVector.sub(v, location);
         n.normalize();
-        PVector vn2n = velocity.get();
-        vn2n = PVector.mult(n, vn2n.dot(n)*2);
+        
+        PVector vn2n = PVector.mult(n, velocity.dot(n)*2);
         velocity.sub(vn2n);
         velocity.mult(restViApresChoc);
         
